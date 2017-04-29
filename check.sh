@@ -103,27 +103,12 @@ echo extracting installer..
 unrar-nonfree x $tmp/$filename -y $tmp > /dev/null
 echo
 
-#detect version
-version=$(echo "$filename")
+#detect version from url
+version=$(echo "$url" | sed "s/\//\n/g" | grep -v "[a-zA-Z]" | grep "[0-9]\+")
 
 #check if version matchs version pattern
 echo $version | grep "^[0-9]\+[\., ]\+[0-9]\+"
 if [ $? -eq 0 ]; then
-echo
-
-#detect change log
-grep -A99 "   Version $version" $tmp/WhatsNew.txt | grep -B99 -m2 "   Version" | grep -v "   Version" | grep "\w" > $tmp/change.log
-
-#check if even something has been created
-if [ -f $tmp/change.log ]; then
-
-#calculate how many lines log file contains
-lines=$(cat $tmp/change.log | wc -l)
-if [ $lines -gt 0 ]; then
-
-echo change log found:
-echo
-cat $tmp/change.log
 echo
 
 echo creating md5 checksum of file..
@@ -151,11 +136,14 @@ fi
 
 #addititonal words in email subject. sequence is important
 case "$filename" in
-*x64*exe)
-bit=$(echo "(64-bit)")
-;;
 *exe)
-bit=$(echo "(32-bit)")
+pack=$(echo "")
+;;
+*msi)
+pack=$(echo "msi")
+;;
+*zip)
+pack=$(echo "zip")
 ;;
 esac
 
@@ -163,36 +151,16 @@ esac
 emails=$(cat ../posting | sed '$aend of file')
 printf %s "$emails" | while IFS= read -r onemail
 do {
-python ../send-email.py "$onemail" "$name $version $bit" "$url 
+python ../send-email.py "$onemail" "$name $version $pack" "$url 
 $md5
 $sha1
 
-`cat $tmp/change.log`"
+https://drive.google.com/drive/folders/0B_3uBwg3RcdVbzhNNlZSZXRoTVU 
+"
 } done
 echo
 
-else
-#changes.log file has created but changes is mission
-echo changes.log file has created but changes is mission
-emails=$(cat ../maintenance | sed '$aend of file')
-printf %s "$emails" | while IFS= read -r onemail
-do {
-echo $onemail
-#python ../send-email.py "$onemail" "$name" "changes.log file has created but changes is mission: $version $changes"
-} done
-fi
 
-else
-#changes.log has not been created
-echo changes.log has not been created
-emails=$(cat ../maintenance | sed '$aend of file')
-printf %s "$emails" | while IFS= read -r onemail
-do {
-python ../send-email.py "$onemail" "$name" "changes.log has not been created: 
-$version 
-$changes "
-} done
-fi
 
 else
 #version do not match version pattern
