@@ -6,7 +6,7 @@
 #sudo apt-get update -y && sudo apt-get upgrade -y
 #sudo apt-get install git -y
 #mkdir -p /home/pi/detect && cd /home/pi/detect
-#git clone https://github.com/catonrug/winrar-detect.git && cd winrar-detect && chmod +x check.sh && ./check.sh
+#git clone https://github.com/catonrug/keepass-detect.git && cd keepass-detect && chmod +x check.sh && ./check.sh
 
 #check if script is located in /home direcotry
 pwd | grep "^/home/" > /dev/null
