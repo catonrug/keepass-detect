@@ -71,7 +71,7 @@ if [ $? -eq 0 ]; then
 #if file request retrieve http code 200 this means OK
 
 #get all exe english installers
-filelist=$(wget -qO- "$download" | sed "s/\d034/\n/g" | grep "http.*download$" | sed '$alast line')
+filelist=$(wget -qO- "$download" | sed "s/\d034/\n/g" | grep "http.*download$" | grep -v "Src\|Source" | sed '$alast line')
 
 #count how many links are in download page. substarct one fake last line from array
 links=$(echo "$filelist" | head -n -1 | wc -l)
