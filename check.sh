@@ -139,7 +139,7 @@ pack=$(echo "")
 pack=$(echo "msi")
 ;;
 *zip)
-pack=$(echo "zip")
+pack=$(echo "Portable")
 ;;
 esac
 
