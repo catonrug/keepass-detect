@@ -99,10 +99,6 @@ size=$(du -b $tmp/$filename | sed "s/\s.*$//g")
 if [ $size -gt 512000 ]; then
 echo
 
-echo extracting installer..
-unrar-nonfree x $tmp/$filename -y $tmp > /dev/null
-echo
-
 #detect version from url
 version=$(echo "$url" | sed "s/\//\n/g" | grep -v "[a-zA-Z]" | grep "[0-9]\+")
 
